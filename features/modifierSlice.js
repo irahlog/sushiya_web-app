@@ -10,10 +10,12 @@ const modifierSlice = createSlice({
   initialState,
   reducers: {
     addRequiredMod: (state, { payload }) => {
-      state.required = [...state.required, payload];
+      // state.required = [...state.required, payload];
+      console.log('required mod!');
     },
     addOptionalMod: (state, action) => {
-      state.optional = [action.payload];
+      // state.optional = [action.payload];
+      console.log('optional mod!');
     },
   },
 });

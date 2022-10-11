@@ -9,8 +9,11 @@ function RequiredModifier({ itemList, modId }) {
   useEffect(() => {
     let filteredMod = itemList;
 
-    setFilteredMod(filteredMod.filter((item) => item._key == itemSelected));
-  }, [itemList, itemSelected]);
+    const result = filteredMod.filter((item) => item._key == itemSelected);
+    const newArr = result.map((v) => ({ ...v, modId: modId }));
+
+    setFilteredMod(newArr);
+  }, [itemList, itemSelected, modId]);
 
   // this function will be called when a radio button is checked
   const handleChange = (e) => {
