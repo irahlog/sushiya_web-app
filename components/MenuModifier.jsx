@@ -13,7 +13,7 @@ const MenuModifier = ({
   required,
 }) => {
   return (
-    <div>
+    <div key={id}>
       {/* Modifier Name */}
       <div className='flex my-3'>
         <div className='flex-1 px-4 pt-6 mb-3 font-bold text-xl'>

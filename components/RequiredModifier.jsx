@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { addToRequiredMod } from '../features/modifierSlice';
 
 function RequiredModifier({ itemList, modId }) {
+  const [filteredMod, setFilteredMod] = useState([]);
   const [itemSelected, setItemSelected] = useState();
 
-  // Found the chosen item! later dispatch this to Redux!
-  const [filteredMod, setFilteredMod] = useState([]);
-
   useEffect(() => {
-    let filteredMod = itemList;
-
-    const result = filteredMod.filter((item) => item._key == itemSelected);
-    const newArr = result.map((v) => ({ ...v, modId: modId }));
-
-    setFilteredMod(newArr);
+    setFilteredMod(itemList.find((elem) => elem._key === itemSelected));
   }, [itemList, itemSelected, modId]);
 
+  const newObj = new Object();
+  newObj[modId] = filteredMod;
+
+  const dispatch = useDispatch();
+  dispatch(addToRequiredMod(newObj));
+
   // this function will be called when a radio button is checked
+  // this is where itemSelected variable gets stored "modId"
   const handleChange = (e) => {
     setItemSelected(e.target.value);
   };
