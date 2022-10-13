@@ -3,8 +3,11 @@ import { useDispatch } from 'react-redux';
 import { addToRequiredMod } from '../features/modifierSlice';
 
 function RequiredModifier({ itemList, modId }) {
-  const [filteredMod, setFilteredMod] = useState([]);
-  const [itemSelected, setItemSelected] = useState();
+  const [filteredMod, setFilteredMod] = useState({});
+  const [itemSelected, setItemSelected] = useState('');
+
+  console.log('$$$$$$$$$ itemSelected', itemSelected);
+  console.log('$$$$$$$$$ filteredMod', filteredMod);
 
   useEffect(() => {
     setFilteredMod(itemList.find((elem) => elem._key === itemSelected));
@@ -59,3 +62,6 @@ function RequiredModifier({ itemList, modId }) {
 }
 
 export default RequiredModifier;
+
+// FIXME:
+// TL;DR: Required mods are getting fired twice.... why?

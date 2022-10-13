@@ -81,3 +81,6 @@ function OptionalModifier({ itemList, modId }) {
 }
 
 export default OptionalModifier;
+
+// TL;DR: The mods in optional gets fired twice initially 1) when it first mounts, 2) when the dependent variable changes.
+// when I click on the checkbox choices, it fires off once
