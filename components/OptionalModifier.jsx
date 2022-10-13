@@ -1,27 +1,42 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { addToOptionalMod } from '../features/modifierSlice';
 
-function OptionalModifer({ itemList, modId }) {
+function OptionalModifier({ itemList, modId }) {
   const [modifierState, setModifierState] = useState([]);
+  const [finalizedOutput, setfinalizedOutput] = useState();
 
+  // Initially, create a copy of the itemList array and for each elem, add key:value pair fo select and default is false
+  // This logic will be in useEffect hook because we want to perform this when the component mounts.
   useEffect(() => {
     let modifierState = itemList;
 
     setModifierState(
-      modifierState.map((modifer) => {
+      modifierState.map((modifier) => {
+        // Instead of returning a new obj, I am making a deep clone of the obj.
         return {
           select: false,
-          id: modifer._key,
-          item_name: modifer.item_name,
-          item_price: modifer.item_price,
+          id: modifier._key,
+          item_name: modifier.item_name,
+          item_price: modifier.item_price,
           modifier_id: modId,
         };
       })
     );
   }, [itemList, modId]);
 
+  // QUESTION: Do I need to wrap this put this in useEffect hook?
+  // QUESTION: Do I create a state for newObj? Is it necessary?
+  const newObj = new Object();
+  newObj[modId] = modifierState;
+  console.log('hello');
+
+  const dispatch = useDispatch();
+  dispatch(addToOptionalMod(newObj));
+
   return (
     <div>
-      {/* Select All Logic */}
+      {/* NOTE: Select All CheckBoxs logic */}
       {/* <input
         type='checkbox'
         onChange={(e) => {
@@ -35,8 +50,8 @@ function OptionalModifer({ itemList, modId }) {
         }}
       ></input> */}
 
-      {modifierState.map((d, i) => (
-        <div key={d.id}>
+      {modifierState.map((modifier) => (
+        <div key={modifier.id}>
           <label className='flex items-center mx-4 cursor-pointer'>
             <div className='flex items-center  space-x-3 flex-1'>
               <input
@@ -44,19 +59,20 @@ function OptionalModifer({ itemList, modId }) {
                   let checked = event.target.checked;
                   setModifierState(
                     modifierState.map((data) => {
-                      if (d.id === data.id) {
-                        data.select = checked;
+                      const newA = JSON.parse(JSON.stringify(data));
+                      if (modifier.id === newA.id) {
+                        newA.select = checked;
                       }
-                      return data;
+                      return newA;
                     })
                   );
                 }}
                 type='checkbox'
-                checked={d.select}
+                checked={modifier.select}
               />
-              <div>{d.item_name}</div>
+              <div>{modifier.item_name}</div>
             </div>
-            <div>+ ${d.item_price.toFixed(2)}</div>
+            <div>+ ${modifier.item_price.toFixed(2)}</div>
           </label>
         </div>
       ))}
@@ -64,4 +80,7 @@ function OptionalModifer({ itemList, modId }) {
   );
 }
 
-export default OptionalModifer;
+export default OptionalModifier;
+
+// TL;DR: The mods in optional gets fired twice initially 1) when it first mounts, 2) when the dependent variable changes.
+// when I click on the checkbox choices, it fires off once

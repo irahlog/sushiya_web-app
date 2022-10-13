@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { addToRequiredMod } from '../features/modifierSlice';
 
 function RequiredModifier({ itemList, modId }) {
-  const [itemSelected, setItemSelected] = useState();
+  const [filteredMod, setFilteredMod] = useState({});
+  const [itemSelected, setItemSelected] = useState('');
 
-  // Found the chosen item! later dispatch this to Redux!
-  const [filteredMod, setFilteredMod] = useState([]);
+  console.log('$$$$$$$$$ itemSelected', itemSelected);
+  console.log('$$$$$$$$$ filteredMod', filteredMod);
 
   useEffect(() => {
-    let filteredMod = itemList;
+    setFilteredMod(itemList.find((elem) => elem._key === itemSelected));
+  }, [itemList, itemSelected, modId]);
 
-    setFilteredMod(filteredMod.filter((item) => item._key == itemSelected));
-  }, [itemList, itemSelected]);
+  const newObj = new Object();
+  newObj[modId] = filteredMod;
+
+  const dispatch = useDispatch();
+  dispatch(addToRequiredMod(newObj));
 
   // this function will be called when a radio button is checked
+  // this is where itemSelected variable gets stored "modId"
   const handleChange = (e) => {
     setItemSelected(e.target.value);
   };
@@ -54,3 +62,6 @@ function RequiredModifier({ itemList, modId }) {
 }
 
 export default RequiredModifier;
+
+// FIXME:
+// TL;DR: Required mods are getting fired twice.... why?
